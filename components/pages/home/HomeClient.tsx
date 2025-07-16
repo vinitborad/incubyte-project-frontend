@@ -1,97 +1,86 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { useDebounce } from "use-debounce"
+
 import { Search, Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Footer from "@/components/Footer"
-import HeroSection from "@/components/pages/home/HeroSection"
+import Footer from "@/components/Footer" // Assuming you have this component
+import HeroSection from "@/components/pages/home/HeroSection" // Assuming you have this component
 
-// Sample data
-const sweets = [
-  {
-    id: 1,
-    name: "Gulab Jamun",
-    category: "Traditional",
-    stock: 25,
-    price: 120,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 2,
-    name: "Rasgulla",
-    category: "Bengali",
-    stock: 30,
-    price: 100,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 3,
-    name: "Jalebi",
-    category: "Traditional",
-    stock: 15,
-    price: 80,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 4,
-    name: "Kaju Katli",
-    category: "Dry Fruits",
-    stock: 20,
-    price: 300,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 5,
-    name: "Rasmalai",
-    category: "Bengali",
-    stock: 18,
-    price: 150,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 6,
-    name: "Barfi",
-    category: "Traditional",
-    stock: 22,
-    price: 200,
-    image: "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200",
-  },
-]
+import { fetchSweets, fetchCategories, Sweet, searchSweets } from "@/lib/api"
 
-const categories = ["All", "Traditional", "Bengali", "Dry Fruits"]
+// Hardcoded categories for now. This can also be fetched from the API.
+const categories = ["All", "Traditional", "Bengali", "Dry Fruits", "Cake", "Pastry", "Muffin", "Nut-Based", "Vegetable-Based", "Syrup-Based", "Flaky"]
 
-export default function Home() {
+interface HomeClientProps {
+  initialSweets: Sweet[];
+}
+
+export function HomeClient({ initialSweets }: HomeClientProps) {
+
+  // --- Client-Side State for Filters and Quantities ---
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [priceRange, setPriceRange] = useState("All")
-  const [quantities, setQuantities] = useState<Record<number, number>>({})
+  const [quantities, setQuantities] = useState<Record<string, number>>({})
 
-  const filteredSweets = sweets.filter((sweet) => {
-    const matchesSearch = sweet.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "All" || sweet.category === selectedCategory
-    const matchesPrice =
-      priceRange === "All" ||
-      (priceRange === "0-100" && sweet.price <= 100) ||
-      (priceRange === "101-200" && sweet.price > 100 && sweet.price <= 200) ||
-      (priceRange === "201+" && sweet.price > 200)
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms delay
 
-    return matchesSearch && matchesCategory && matchesPrice
-  })
+  const searchParams = useMemo(() => {
+    const params: any = {};
+    if (debouncedSearchTerm) params.name = debouncedSearchTerm;
+    if (selectedCategory !== "All") params.category = selectedCategory;
 
-  const updateQuantity = (id: number, change: number) => {
+    if (priceRange !== "All") {
+      const [min, max] = priceRange.split('-');
+      if (min) params.minPrice = parseInt(min, 10);
+      // For the '201+' case, there is no max price.
+      if (max) params.maxPrice = parseInt(max, 10);
+    }
+    return params;
+  }, [debouncedSearchTerm, selectedCategory, priceRange]);
+
+  // --- Data Fetching with TanStack Query ---
+  const { data: sweets, isLoading, error } = useQuery<Sweet[]>({
+    queryKey: ['sweets', searchParams],
+    queryFn: () => searchSweets(searchParams),
+    initialData: initialSweets,
+  });
+
+  const { data: fetchedCategories, isLoading: isLoadingCategories } = useQuery<string[]>({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
+
+  const categories = useMemo(() => {
+    return ["All", ...(fetchedCategories || [])];
+  }, [fetchedCategories]);
+
+  // --- Event Handlers ---
+  const updateQuantity = (id: string, change: number) => {
     setQuantities((prev) => ({
       ...prev,
       [id]: Math.max(1, (prev[id] || 1) + change),
     }))
   }
 
-  const handleBuy = (sweet: any) => {
-    const quantity = quantities[sweet.id] || 1
+  const handleBuy = (sweet: Sweet) => {
+    const quantity = quantities[sweet._id] || 1
+    // This will be replaced with a call to the purchase API endpoint
     alert(`Ordered ${quantity} ${sweet.name}(s) for ₹${sweet.price * quantity}`)
+  }
+
+  // --- Render Logic ---
+  if (isLoading && !initialSweets) return <div>Loading sweets...</div>
+  if (error) {
+    console.error("Error fetching sweets:", error);
+    return <div>An error occurred: {error.message}</div>
   }
 
   return (
@@ -119,7 +108,10 @@ export default function Home() {
                 <SelectItem value="All">All Prices</SelectItem>
                 <SelectItem value="0-100">₹0 - ₹100</SelectItem>
                 <SelectItem value="101-200">₹101 - ₹200</SelectItem>
-                <SelectItem value="201+">₹201+</SelectItem>
+                <SelectItem value="201-300">₹201 - ₹300</SelectItem>
+                <SelectItem value="301-400">₹301 - ₹400</SelectItem>
+                <SelectItem value="401-500">₹401 - ₹500</SelectItem>
+                <SelectItem value="501+">₹501+</SelectItem>
               </SelectContent>
             </Select>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -141,35 +133,35 @@ export default function Home() {
       {/* Sweets Grid */}
       <div className="container mx-auto px-4 mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSweets.map((sweet) => (
+          {sweets.map((sweet) => (
             <Card
-              key={sweet.id}
+              key={sweet._id} // Use MongoDB's _id
               className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm"
             >
               <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center">
-                <img src={sweet.image || "/placeholder.svg"} alt={sweet.name} className="w-full h-full object-cover" />
+                <img src={"/placeholder.svg"} alt={sweet.name} className="w-full h-full object-cover" />
               </div>
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg mb-2">{sweet.name}</h3>
                 <div className="flex justify-between items-center mb-3">
                   <Badge variant="secondary">{sweet.category}</Badge>
-                  <span className="text-sm text-gray-600">{sweet.stock} left</span>
+                  <span className="text-sm text-gray-600">{sweet.quantity} left</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center border rounded-lg">
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => updateQuantity(sweet.id, -1)}
+                      onClick={() => updateQuantity(sweet._id, -1)}
                       className="h-8 w-8 p-0"
                     >
                       <Minus className="w-4 h-4" />
                     </Button>
-                    <span className="px-3 py-1 min-w-[2rem] text-center">{quantities[sweet.id] || 1}</span>
+                    <span className="px-3 py-1 min-w-[2rem] text-center">{quantities[sweet._id] || 1}</span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => updateQuantity(sweet.id, 1)}
+                      onClick={() => updateQuantity(sweet._id, 1)}
                       className="h-8 w-8 p-0"
                     >
                       <Plus className="w-4 h-4" />
@@ -187,8 +179,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* Footer */}
       <Footer />
     </div>
   )
