@@ -29,6 +29,11 @@ export interface AddSweetPayload {
   quantity: number;
 }
 
+interface RestockPayload {
+  sweetId: string;
+  quantity: number;
+}
+
 // Create an Axios instance pointing to your backend
 const api = axios.create({
   baseURL: 'http://localhost:5000', // Your backend server URL
@@ -60,5 +65,17 @@ export const purchaseSweet = async ({ sweetId, quantity }: PurchasePayload) => {
 
 export const addSweet = async (payload: AddSweetPayload): Promise<Sweet> => {
   const { data } = await api.post('/add', payload);
+  return data;
+};
+
+// Function to restock a sweet
+export const restockSweet = async ({ sweetId, quantity }: RestockPayload) => {
+  const { data } = await api.post(`/restock/${sweetId}`, { quantity });
+  return data;
+};
+
+// Function to delete a sweet
+export const deleteSweet = async (sweetId: string) => {
+  const { data } = await api.delete(`/delete/${sweetId}`);
   return data;
 };

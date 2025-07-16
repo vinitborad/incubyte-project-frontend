@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useDebounce } from "use-debounce"
 
-import { Search, Plus, Trash2 } from "lucide-react"
+import { Search, Plus, Trash2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 
 import Footer from "@/components/Footer"
 import Header from "@/components/pages/inventory-management/Header"
-import { fetchCategories, searchSweets, Sweet, addSweet } from "@/lib/api"
+import { fetchCategories, searchSweets, Sweet, addSweet, restockSweet, deleteSweet } from "@/lib/api"
 import { AddSweetDialog } from "./AddSweetDialog"
 
 interface InventoryClientProps {
@@ -79,19 +79,48 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
     }
   });
 
-  // --- Placeholder Handlers (to be implemented next) ---
-  const handleAddStock = () => {
-    if (selectedSweetId && stockToAdd) {
-      console.log(`Adding ${stockToAdd} stock to sweet ${selectedSweetId}`);
-      // Close dialog
+  // Create the mutation for restocking a sweet
+  const { mutate: restockMutation, isPending: isRestocking } = useMutation({
+    mutationFn: restockSweet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sweets'] });
+      // Close the dialog after success
       setIsAddStockOpen(false);
       setSelectedSweetId(null);
       setStockToAdd("");
+    },
+    onError: (error) => {
+      alert(`Failed to add stock: ${error.message}`);
     }
-  }
+  });
+
+  // Create the mutation for deleting a sweet
+  const { mutate: deleteMutation, isPending: isDeleting } = useMutation({
+    mutationFn: deleteSweet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sweets'] });
+    },
+    onError: (error) => {
+      alert(`Failed to delete sweet: ${error.message}`);
+    }
+  });
+
 
   const handleDeleteSweet = (id: string) => {
-    console.log(`Deleting sweet ${id}`);
+    deleteMutation(id);
+  }
+
+  // 6. Update the handleAddStock function
+  const handleAddStock = () => {
+    const quantity = Number.parseInt(stockToAdd, 10);
+
+    // Add validation for positive number
+    if (!selectedSweetId || !quantity || quantity <= 0) {
+      alert("Please enter a positive number for the quantity.");
+      return;
+    }
+
+    restockMutation({ sweetId: selectedSweetId, quantity });
   }
 
   const openAddStockDialog = (id: string) => {
@@ -110,6 +139,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <AddSweetDialog
               categories={fetchedCategories || []}
+              //@ts-ignore
               onFormSubmit={addSweetMutation}
               isPending={isAddingSweet}
             />
@@ -153,14 +183,17 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
 
         {/* --- Sweets Grid (now using `sweets` from useQuery) --- */}
         {isLoading && <div>Loading...</div>}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sweets?.map((sweet) => (
             <Card key={sweet._id} className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm">
               <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
                 <img src={"https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
               </div>
+
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg mb-2">{sweet.name}</h3>
+
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Category:</span>
@@ -177,14 +210,19 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
                     <span className="font-semibold text-blue-600">₹{sweet.price}</span>
                   </div>
                 </div>
+
                 <div className="flex gap-2">
-                  <Dialog open={isAddStockOpen && selectedSweetId === sweet._id} onOpenChange={(open) => {
-                    setIsAddStockOpen(open);
-                    if (!open) {
-                      setSelectedSweetId(null);
-                      setStockToAdd("");
-                    }
-                  }}>
+                  <Dialog
+                    open={isAddStockOpen && selectedSweetId === sweet._id}
+                    onOpenChange={(isOpen) => {
+                      setIsAddStockOpen(isOpen);
+                      // If the dialog is closing, reset the state
+                      if (!isOpen) {
+                        setSelectedSweetId(null);
+                        setStockToAdd("");
+                      }
+                    }}
+                  >
                     <DialogTrigger asChild>
                       <Button variant="outline" className="flex-1 bg-transparent" onClick={() => openAddStockDialog(sweet._id)}>
                         Add Stock
@@ -195,16 +233,26 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
                         <DialogTitle>Add Stock for {sweet.name}</DialogTitle>
                       </DialogHeader>
                       <div className="space-y-4">
-                        <div>
+                        <div className="space-y-3">
                           <Label htmlFor="stock">Quantity to Add</Label>
-                          <Input id="stock" type="number" placeholder="Enter quantity" value={stockToAdd} onChange={(e) => setStockToAdd(e.target.value)} min="1" />
+                          <Input
+                            id="stock"
+                            type="number"
+                            placeholder="Enter quantity"
+                            value={stockToAdd}
+                            onChange={(e) => setStockToAdd(e.target.value)}
+                            min="1"
+                          />
                         </div>
-                        <Button onClick={handleAddStock} className="w-full">
+                        {/* 7. Update the button to show loading state */}
+                        <Button onClick={handleAddStock} disabled={isRestocking} className="w-full">
+                          {isRestocking && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                           Add Stock
                         </Button>
                       </div>
                     </DialogContent>
                   </Dialog>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="destructive" className="flex-1">
