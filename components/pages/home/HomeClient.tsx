@@ -1,34 +1,45 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useDebounce } from "use-debounce"
 
-import { Search, Minus, Plus } from "lucide-react"
+import { Search, Minus, Plus, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 import Footer from "@/components/Footer" // Assuming you have this component
 import HeroSection from "@/components/pages/home/HeroSection" // Assuming you have this component
 
-import { fetchSweets, fetchCategories, Sweet, searchSweets } from "@/lib/api"
-
-// Hardcoded categories for now. This can also be fetched from the API.
-const categories = ["All", "Traditional", "Bengali", "Dry Fruits", "Cake", "Pastry", "Muffin", "Nut-Based", "Vegetable-Based", "Syrup-Based", "Flaky"]
+import { fetchCategories, Sweet, searchSweets, purchaseSweet } from "@/lib/api"
 
 interface HomeClientProps {
   initialSweets: Sweet[];
 }
 
 export function HomeClient({ initialSweets }: HomeClientProps) {
+  const queryClient = useQueryClient();
 
   // --- Client-Side State for Filters and Quantities ---
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [priceRange, setPriceRange] = useState("All")
   const [quantities, setQuantities] = useState<Record<string, number>>({})
+  const [sweetToBuy, setSweetToBuy] = useState<Sweet | null>(null);
 
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms delay
 
@@ -58,6 +69,20 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
     queryFn: fetchCategories,
   });
 
+  // mutation for purchasing a sweet
+  const { mutate: purchase, isPending: isPurchasing } = useMutation({
+    mutationFn: purchaseSweet,
+    onSuccess: () => {
+      // On success, invalidate the 'sweets' query to refetch data
+      queryClient.invalidateQueries({ queryKey: ['sweets'] });
+      setSweetToBuy(null);
+    },
+    onError: (error) => {
+      alert(`Purchase failed: ${error.message}`);
+      setSweetToBuy(null);
+    }
+  });
+
   const categories = useMemo(() => {
     return ["All", ...(fetchedCategories || [])];
   }, [fetchedCategories]);
@@ -70,10 +95,17 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
     }))
   }
 
-  const handleBuy = (sweet: Sweet) => {
-    const quantity = quantities[sweet._id] || 1
-    // This will be replaced with a call to the purchase API endpoint
-    alert(`Ordered ${quantity} ${sweet.name}(s) for ₹${sweet.price * quantity}`)
+  const handleBuyClick = (sweet: Sweet) => {
+    // This function now just sets the state to open the dialog
+    setSweetToBuy(sweet);
+  }
+
+  const handleConfirmPurchase = () => {
+    if (!sweetToBuy) return;
+
+    const quantity = quantities[sweetToBuy._id] || 1;
+    // Call the mutate function from useMutation
+    purchase({ sweetId: sweetToBuy._id, quantity });
   }
 
   // --- Render Logic ---
@@ -139,7 +171,7 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
               className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm"
             >
               <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center">
-                <img src={"/placeholder.svg"} alt={sweet.name} className="w-full h-full object-cover" />
+                <img src={"https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
               </div>
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg mb-2">{sweet.name}</h3>
@@ -167,12 +199,35 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
-                  <Button
-                    onClick={() => handleBuy(sweet)}
-                    className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
-                  >
-                    Buy ₹{sweet.price}
-                  </Button>
+                  <AlertDialog open={sweetToBuy?._id === sweet._id} onOpenChange={(isOpen) => !isOpen && setSweetToBuy(null)}>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        onClick={() => handleBuyClick(sweet)}
+                        disabled={isPurchasing} // Disable button while purchasing
+                        className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 w-32"
+                      >
+                        {isPurchasing && sweetToBuy?._id === sweet._id ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          `Buy ₹${sweet.price}`
+                        )}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Purchase</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to buy {quantities[sweet._id] || 1} {sweet.name}(s)?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmPurchase}>
+                          Confirm
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>
