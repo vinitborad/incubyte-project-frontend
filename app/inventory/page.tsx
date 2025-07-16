@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { Search, ArrowLeft, Plus, Trash2 } from "lucide-react"
+import { Search, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -21,6 +20,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label"
+import Footer from "@/components/Footer"
+import Header from "@/components/pages/inventory-management/Header"
 
 // Sample data
 const initialSweets = [
@@ -146,21 +147,7 @@ export default function InventoryPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Link href="/">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Go Back
-              </Button>
-            </Link>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Inventory Management
-            </h1>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Search and Filters */}
       <div className="container mx-auto px-4 py-8">
@@ -304,30 +291,7 @@ export default function InventoryPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Sweet Delights</h3>
-              <p className="text-blue-100">Your trusted destination for authentic and delicious sweets since 1995.</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Contact Info</h3>
-              <p className="text-blue-100 mb-2">📍 123 Sweet Street, Dessert City</p>
-              <p className="text-blue-100 mb-2">📞 +91 98765 43210</p>
-              <p className="text-blue-100">✉️ info@sweetdelights.com</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Opening Hours</h3>
-              <p className="text-blue-100 mb-2">Mon - Sat: 9:00 AM - 9:00 PM</p>
-              <p className="text-blue-100">Sunday: 10:00 AM - 8:00 PM</p>
-            </div>
-          </div>
-          <div className="border-t border-blue-400 mt-8 pt-8 text-center">
-            <p className="text-blue-100">© 2024 Sweet Delights. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { Search, Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Footer from "@/components/Footer"
+import HeroSection from "@/components/pages/home/HeroSection"
 
 // Sample data
 const sweets = [
@@ -95,46 +96,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full"></div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-              Sweet Delights
-            </h1>
-          </div>
-          <Link href="/inventory">
-            <Button
-              variant="outline"
-              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white border-0 hover:from-orange-600 hover:to-pink-600"
-            >
-              Inventory Management
-            </Button>
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="py-20 text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Sweetest Treats in Town
-          </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Discover our handcrafted collection of traditional and modern sweets, made with love and the finest
-            ingredients
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
-            >
-              Explore Sweets
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Search and Filters */}
       <div className="container mx-auto px-4 mb-8">
@@ -227,30 +189,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-orange-600 to-pink-600 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Sweet Delights</h3>
-              <p className="text-orange-100">Your trusted destination for authentic and delicious sweets since 1995.</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Contact Info</h3>
-              <p className="text-orange-100 mb-2">📍 123 Sweet Street, Dessert City</p>
-              <p className="text-orange-100 mb-2">📞 +91 98765 43210</p>
-              <p className="text-orange-100">✉️ info@sweetdelights.com</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Opening Hours</h3>
-              <p className="text-orange-100 mb-2">Mon - Sat: 9:00 AM - 9:00 PM</p>
-              <p className="text-orange-100">Sunday: 10:00 AM - 8:00 PM</p>
-            </div>
-          </div>
-          <div className="border-t border-orange-400 mt-8 pt-8 text-center">
-            <p className="text-orange-100">© 2024 Sweet Delights. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
