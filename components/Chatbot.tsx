@@ -81,9 +81,17 @@ export function Chatbot() {
       {/* Floating Action Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 shadow-lg z-50"
+        className={`fixed bottom-6 right-6 h-14 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 shadow-lg z-50 flex items-center transition-all duration-300 ease-in-out ${isOpen ? 'w-14 justify-center' : 'w-auto px-6 gap-x-3'}`
+        }
       >
-        {isOpen ? <X /> : <MessageSquare />}
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <>
+            <MessageSquare className="h-6 w-6" />
+            <span className="text-md font-medium">Meet AI Waiter</span>
+          </>
+        )}
       </Button>
 
       {/* Chat Popup */}
