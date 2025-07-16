@@ -79,3 +79,18 @@ export const deleteSweet = async (sweetId: string) => {
   const { data } = await api.delete(`/delete/${sweetId}`);
   return data;
 };
+
+
+const chatbotApi = axios.create({
+  baseURL: 'http://localhost:8000', // Your Python server URL
+});
+
+interface ChatPayload {
+  message: string;
+  session_id: string;
+}
+
+export const sendChatMessage = async (payload: ChatPayload): Promise<string> => {
+  const { data } = await chatbotApi.post('/chat', payload);
+  return data.response;
+};
