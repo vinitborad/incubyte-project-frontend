@@ -169,7 +169,10 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
                 <SelectItem value="All">All Prices</SelectItem>
                 <SelectItem value="0-100">₹0 - ₹100</SelectItem>
                 <SelectItem value="101-200">₹101 - ₹200</SelectItem>
-                <SelectItem value="201+">₹201+</SelectItem>
+                <SelectItem value="201-300">₹201 - ₹300</SelectItem>
+                <SelectItem value="301-400">₹301 - ₹400</SelectItem>
+                <SelectItem value="401-500">₹401 - ₹500</SelectItem>
+                <SelectItem value="501+">₹501+</SelectItem>
               </SelectContent>
             </Select>
 
@@ -191,7 +194,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
         {/* --- Sweets Grid (now using `sweets` from useQuery) --- */}
         {isLoading && <div>Loading...</div>}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sweets?.map((sweet) => (
             <Card key={sweet._id} className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm">
               <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">

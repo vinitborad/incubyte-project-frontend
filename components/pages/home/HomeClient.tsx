@@ -27,6 +27,7 @@ import HeroSection from "@/components/pages/home/HeroSection" // Assuming you ha
 import { Chatbot } from "@/components/Chatbot"
 
 import { fetchCategories, Sweet, searchSweets, purchaseSweet } from "@/lib/api"
+import Image from "next/image"
 
 interface HomeClientProps {
   initialSweets: Sweet[];
@@ -171,14 +172,18 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
 
       {/* Sweets Grid */}
       <div className="container mx-auto px-4 mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sweets.map((sweet) => (
             <Card
               key={sweet._id} // Use MongoDB's _id
               className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm"
             >
               <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center">
-                <img src={process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL || "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
+                <img
+                  src={process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL || "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"}
+                  alt={sweet.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg mb-2">{sweet.name}</h3>
