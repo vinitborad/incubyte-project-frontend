@@ -44,13 +44,20 @@ export function Chatbot({ onRefreshData }: ChatbotProps) {
     }
   }, []);
 
+  // Effect to add welcome message when name is set and no messages exist
+  useEffect(() => {
+    if (name && messages.length === 0) {
+      const welcomeMessage = "Hello! Welcome to our sweet shop! 🍰 I'm your AI assistant here to help you with everything. You can place orders directly by telling me what delicious treats you'd like, browse our menu, or ask any questions about our products. How can I sweeten your day?";
+      addMessage({ role: 'ai', text: welcomeMessage });
+    }
+  }, [name, messages.length, addMessage]);
+
   // Effect to scroll to the bottom of the chat on new messages
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
-
 
   // TanStack Mutation for sending messages
   const { mutate: sendMessage, isPending } = useMutation({
