@@ -19,6 +19,8 @@ export function Chatbot({ onRefreshData }: ChatbotProps) {
   // UI State
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
   // User/Session State
   const [name, setName] = useState('');
@@ -42,6 +44,20 @@ export function Chatbot({ onRefreshData }: ChatbotProps) {
     if (storedName) {
       setName(storedName);
     }
+
+    // Show button and trigger animation after component mounts
+    const showTimer = setTimeout(() => {
+      setShowButton(true);
+    }, 300);
+
+    const animationTimer = setTimeout(() => {
+      setHasAnimated(true);
+    }, 2800); // Animation duration is 2.5s, so we mark as complete after
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(animationTimer);
+    };
   }, []);
 
   // Effect to add welcome message when name is set and no messages exist
@@ -96,20 +112,24 @@ export function Chatbot({ onRefreshData }: ChatbotProps) {
   return (
     <div>
       {/* Floating Action Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 h-14 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 shadow-lg z-50 flex items-center transition-all duration-300 ease-in-out ${isOpen ? 'w-14 justify-center' : 'w-auto px-6 gap-x-3'}`
-        }
-      >
-        {isOpen ? (
-          <X className="h-6 w-6" />
-        ) : (
-          <>
-            <MessageSquare className="h-6 w-6" />
-            <span className="text-md font-medium">Meet AI Waiter</span>
-          </>
-        )}
-      </Button>
+      {showButton && (
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`fixed bottom-6 right-6 h-14 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 shadow-lg z-50 flex items-center transition-all duration-300 ease-in-out ${isOpen ? 'w-14 justify-center' : 'w-auto px-6 gap-x-3'}`}
+          style={{
+            animation: !hasAnimated ? 'bounceFromLeft 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards' : undefined,
+          }}
+        >
+          {isOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <>
+              <MessageSquare className="h-6 w-6" />
+              <span className="text-md font-medium">Meet AI Waiter</span>
+            </>
+          )}
+        </Button>
+      )}
 
       {/* Chat Popup */}
       {isOpen && (

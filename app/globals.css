@@ -116,7 +116,57 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Chatbot button bounce animation */
+@keyframes bounceFromLeft {
+  0% {
+    transform: translateX(-200vw) translateY(0);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  25% {
+    transform: translateX(20px) translateY(-20px);
+  }
+
+  35% {
+    transform: translateX(-10px) translateY(-10px);
+  }
+
+  45% {
+    transform: translateX(10px) translateY(-15px);
+  }
+
+  55% {
+    transform: translateX(-5px) translateY(-8px);
+  }
+
+  65% {
+    transform: translateX(5px) translateY(-10px);
+  }
+
+  75% {
+    transform: translateX(-2px) translateY(-5px);
+  }
+
+  85% {
+    transform: translateX(2px) translateY(-3px);
+  }
+
+  95% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+
+  100% {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
   }
 }
