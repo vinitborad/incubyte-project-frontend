@@ -24,6 +24,7 @@ import {
 
 import Footer from "@/components/Footer" // Assuming you have this component
 import HeroSection from "@/components/pages/home/HeroSection" // Assuming you have this component
+import { Chatbot } from "@/components/Chatbot"
 
 import { fetchCategories, Sweet, searchSweets, purchaseSweet } from "@/lib/api"
 
@@ -82,6 +83,11 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
       setSweetToBuy(null);
     }
   });
+
+  // Function to refresh data that will be passed to the chatbot
+  const handleRefreshData = () => {
+    queryClient.invalidateQueries({ queryKey: ['sweets'] });
+  };
 
   const categories = useMemo(() => {
     return ["All", ...(fetchedCategories || [])];
@@ -235,6 +241,7 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
         </div>
       </div>
       <Footer />
+      <Chatbot onRefreshData={handleRefreshData} />
     </div>
   )
 }

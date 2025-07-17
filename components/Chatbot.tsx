@@ -11,7 +11,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 
-export function Chatbot() {
+interface ChatbotProps {
+  onRefreshData?: () => void;
+}
+
+export function Chatbot({ onRefreshData }: ChatbotProps) {
   // UI State
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -53,6 +57,11 @@ export function Chatbot() {
     mutationFn: sendChatMessage,
     onSuccess: (data) => {
       addMessage({ role: 'ai', text: data });
+      // Refresh data on the page after successful AI response
+      if (onRefreshData) {
+        console.log('Refreshing data after AI response');
+        onRefreshData();
+      }
     },
     onError: (error) => {
       addMessage({ role: 'ai', text: `Sorry, something went wrong: ${error.message}` });

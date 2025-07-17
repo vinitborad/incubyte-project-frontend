@@ -1,6 +1,5 @@
 "use client";
 
-import { Chatbot } from "@/components/Chatbot";
 import QueryProvider from "@/stores/queryProvider";
 
 export default function NewOrderLayout({
@@ -10,10 +9,7 @@ export default function NewOrderLayout({
 }) {
   return (
     <QueryProvider>
-      <>
-        {children}
-        <Chatbot />
-      </>
+      {children}
     </QueryProvider>
   );
 }

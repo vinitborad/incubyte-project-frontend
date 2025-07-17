@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 
 import Footer from "@/components/Footer"
 import Header from "@/components/pages/inventory-management/Header"
+import { Chatbot } from "@/components/Chatbot"
 import { fetchCategories, searchSweets, Sweet, addSweet, restockSweet, deleteSweet } from "@/lib/api"
 import { AddSweetDialog } from "./AddSweetDialog"
 
@@ -105,6 +106,11 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
     }
   });
 
+  // Function to refresh data that will be passed to the chatbot
+  const handleRefreshData = () => {
+    queryClient.invalidateQueries({ queryKey: ['sweets'] });
+    queryClient.invalidateQueries({ queryKey: ['categories'] });
+  };
 
   const handleDeleteSweet = (id: string) => {
     deleteMutation(id);
@@ -280,6 +286,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
         </div>
       </div>
       <Footer />
+      <Chatbot onRefreshData={handleRefreshData} />
     </div>
   )
 }
