@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Label } from "@/components/ui/label"
 
 import Footer from "@/components/Footer"
-import Header from "@/components/pages/inventory-management/Header"
+import Header from "@/components/pages/inventory/Header"
 import { Chatbot } from "@/components/Chatbot"
 import { fetchCategories, searchSweets, Sweet, addSweet, restockSweet, deleteSweet } from "@/lib/api"
 import { AddSweetDialog } from "./AddSweetDialog"
@@ -39,6 +39,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
 
   const searchParams = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params: any = {};
     if (debouncedSearchTerm) params.name = debouncedSearchTerm;
     if (selectedCategory !== "All") params.category = selectedCategory;
@@ -145,7 +146,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <AddSweetDialog
               categories={fetchedCategories || []}
-              //@ts-ignore
+              // @ts-expect-error - The complex type of useMutation's `mutate` function doesn't perfectly match the simple prop type.
               onFormSubmit={addSweetMutation}
               isPending={isAddingSweet}
             />

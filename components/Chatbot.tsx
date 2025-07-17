@@ -70,6 +70,7 @@ export function Chatbot({ onRefreshData }: ChatbotProps) {
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const enteredName = (e.target as any).name.value;
     if (enteredName.trim()) {
       setName(enteredName);

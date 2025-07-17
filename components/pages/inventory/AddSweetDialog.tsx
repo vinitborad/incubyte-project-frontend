@@ -34,8 +34,8 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
   const [categorySearch, setCategorySearch] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
-    //@ts-ignore
-    resolver: zodResolver(formSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       category: "",
@@ -76,11 +76,11 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
           <DialogTitle>Add a New Sweet</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          {/* @ts-ignore */}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <form onSubmit={form.handleSubmit(onSubmit) as any} className="space-y-4">
             <FormField
-              // @ts-ignore
-              control={form.control}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -94,8 +94,8 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
             />
 
             <FormField
-              // @ts-ignore
-              control={form.control}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
               name="category"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -125,7 +125,7 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
                                 setComboboxOpen(false);
                               }}
                             >
-                              Create "{categorySearch}"
+                              Create &quot;{categorySearch}&quot;
                             </CommandItem>
                           )}
                           <CommandGroup>
@@ -154,8 +154,8 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
             />
 
             <FormField
-              // @ts-ignore
-              control={form.control}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
               name="price"
               render={({ field }) => (
                 <FormItem>
@@ -169,8 +169,8 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
             />
 
             <FormField
-              // @ts-ignore
-              control={form.control}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
               name="quantity"
               render={({ field }) => (
                 <FormItem>
