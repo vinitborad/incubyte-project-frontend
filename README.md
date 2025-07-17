@@ -1,62 +1,207 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍭 Sweet Shop Frontend
 
-## Getting Started
+<div align="center">
 
-### Environment Setup
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=internet-explorer)](https://incubyte.vinitborad.com)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](#-crafting-tools)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](#-crafting-tools)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#-crafting-tools)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](#-crafting-tools)
 
-1. Copy the environment variables template:
-```bash
-cp .env.example .env.local
+
+**🎯 Checkout my craft at: [https://incubyte.vinitborad.com](https://incubyte.vinitborad.com)**
+
+With this kata I would love to show you my startups: **[www.patrikaprinters.com](https://www.patrikaprinters.com)** (printed 2lakh+ pages of customers), **[www.hajripatrak.com](https://www.hajripatrak.com)** (Comprehensive QR attendance system for colleges/universities), **[www.apnipg.com](https://www.apnipg.com)** (Generated up to ₹1.25 lakhs of revenue, PG brokering Platform).
+
+</div>
+
+## 🚨 Clarifications
+
+- I dont have used AI to code things, but I have used AI to learn things.
+- I have created higly test converaged backend infrastrcutre. And i would love to follow same also on frontend as i had focued more here on creating funtional ui first due to time constraint.
+- I would love to spend more time to craft more functionalities in this projects like Auth, Email/Push Notifications, Payment Gateway, Analytics, etc.
+
+### 🔗 Complete Project Ecosystem
+This is the frontend repo of our sweet shop:
+- 🔧 **Backend**: Check out [incubyte-project-backend](https://github.com/vinitborad/incubyte-project-backend) for backend API built using Express.js & MongoDB
+- 🤖 **Chatbot**: Check out [incubyte-project-chatbot](https://github.com/vinitborad/incubyte-project-chatbot) to see our RAG based AI Agent built using LangGraph & OpenAI
+- 🎨 **Frontend**: This repository (Next.js/React application)
+
+## ⚡ Crafting Tools
+
+Crafted using Next.js, React, TypeScript, TailwindCSS, Zustand, React Query, and modern UI components:
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: TailwindCSS v4, Radix UI components
+- **State Management**: Zustand for global state, React Query for server state
+- **Forms**: React Hook Form with Zod validation
+- **UI Components**: Custom components built with Radix UI primitives
+- **Icons**: Lucide React icons
+- **Package Manager**: pnpm
+
+## 🛠️ Features
+
+### Core Functionality
+- 🏠 **Beautiful Home Page**: Modern landing page with hero section and sweet showcase
+- 🍬 **Sweet Catalog**: Browse and view all available sweets with beautiful card layouts
+- 🔍 **Advanced Search & Filtering**: Filter by name, category, and price range with real-time search
+- 🛒 **Purchase System**: Buy sweets directly from the catalog with quantity management
+- 📦 **Inventory Management**: Admin panel for adding, restocking, and managing sweets
+- 🏷️ **Category Management**: Dynamic category filtering and organization
+- 🤖 **AI Chatbot Integration**: Embedded chatbot for natural language interaction and purchases
+- 🎨 **Modern UI/UX**: Clean, intuitive interface with smooth animations
+
+### Key Pages & Components
+- **Home Page**: Hero section with featured sweets and search functionality
+- **Inventory Management**: Complete CRUD operations for sweet management
+- **AI Chatbot**: Floating chatbot widget for customer assistance
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **pnpm** package manager
+- Running backend API (see [backend repo](https://github.com/vinitborad/incubyte-project-backend))
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/vinitborad/incubyte-project-frontend.git
+   cd incubyte-project-frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Update `.env.local` with your configuration:
+   ```env
+   NEXT_PUBLIC_BACKEND_API_URL=http://localhost:5000
+   NEXT_PUBLIC_CHATBOT_API_URL=http://localhost:8000
+   NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL=https://your-placeholder-image-url.com/image.svg
+   ```
+
+4. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+5. **Build for production**
+   ```bash
+   pnpm build
+   pnpm start
+   ```
+
+## 📁 Project Structure
+
+```
+frontend/
+├── app/
+│   ├── (home)/
+│   │   ├── layout.tsx             # Home layout wrapper
+│   │   ├── page.tsx               # Main home page
+│   │   └── inventory/
+│   │       └── page.tsx           # Inventory management page
+│   ├── actions.ts                 # Server actions
+│   ├── globals.css               # Global styles
+│   └── layout.tsx                # Root layout
+├── components/
+│   ├── pages/
+│   │   ├── home/
+│   │   │   ├── HeroSection.tsx    # Landing page hero
+│   │   │   └── HomeClient.tsx     # Home page client component
+│   │   └── inventory/
+│   │       ├── AddSweetDialog.tsx  # Add sweet modal
+│   │       ├── Header.tsx         # Inventory header
+│   │       └── InventoryClient.tsx # Inventory management
+│   ├── ui/                       # Reusable UI components
+│   │   ├── button.tsx            # Button component
+│   │   ├── card.tsx              # Card component
+│   │   ├── dialog.tsx            # Modal component
+│   │   ├── form.tsx              # Form components
+│   │   ├── input.tsx             # Input component
+│   │   └── ...                   # Other UI components
+│   ├── Chatbot.tsx               # AI chatbot widget
+│   └── Footer.tsx                # Footer component
+├── lib/
+│   ├── api.ts                    # API client functions
+│   ├── store.ts                  # Zustand store setup
+│   └── utils.ts                  # Utility functions
+├── stores/
+│   └── queryProvider.tsx         # React Query provider
+├── public/                       # Static assets
+├── components.json               # Shadcn/ui configuration
+├── next.config.ts                # Next.js configuration
+├── tailwind.config.js            # TailwindCSS configuration
+├── tsconfig.json                 # TypeScript configuration
+└── README.md                     # You are here! 📍
 ```
 
-2. Update `.env.local` with your actual values:
-```env
-NEXT_PUBLIC_BACKEND_API_URL=http://localhost:5000
-NEXT_PUBLIC_CHATBOT_API_URL=http://localhost:8000
-NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL=https://your-placeholder-image-url.com/image.svg
-```
+## 🔮 Future Enhancements
 
-### Running the Development Server
+Given more time, I would love to extend this frontend with:
+- 🔐 **Authentication UI** (Login/Register forms, protected routes)
+- 🛒 **Shopping Cart** with persistent state
+- 💳 **Payment Integration** UI (Stripe/Razorpay checkout)
+- 📊 **Analytics Dashboard** for sales insights
+- 🔍 **Advanced Search** with filters and sorting
+- 📱 **Progressive Web App** capabilities
+- 🌙 **Dark Mode** theme support
+- 🧪 **Testing Suite** (Jest, React Testing Library, Cypress)
+- ♿ **Accessibility** improvements (ARIA, screen readers)
+- 🎨 **Animation Library** integration (Framer Motion)
 
-First, run the development server:
+## 🤝 Contributing
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+I welcome contributions to make this frontend even better! Here's how you can help:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development Setup
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes following the coding standards
+4. Test your changes thoroughly
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to the branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Coding Standards
+- Follow existing TypeScript and React patterns
+- Use proper component composition and hooks
+- Maintain consistent styling with TailwindCSS
+- Follow Next.js best practices (App Router, Server Components)
+- Use meaningful commit messages and component names
+- Ensure responsive design principles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎉 Acknowledgments
 
-## Environment Variables
+**Big thanks to [Incubyte Consulting LLP](https://incubyte.co) to made me build this beautiful piece of software.**
 
-This project uses environment variables for configuration. The following variables are required:
+## 👨‍💻 About the Developer
 
-- `NEXT_PUBLIC_BACKEND_API_URL`: URL of the main backend API server (default: http://localhost:5000)
-- `NEXT_PUBLIC_CHATBOT_API_URL`: URL of the Python chatbot server (default: http://localhost:8000)
-- `NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL`: Default placeholder image URL for products
+### 📬 Connect With Me
 
-All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. For sensitive variables that should only be available on the server-side, omit the `NEXT_PUBLIC_` prefix.
+<div align="center">
 
-## Learn More
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vinitborad)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vinitborad)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:vinitboradofficial@gmail.com)
 
-To learn more about Next.js, take a look at the following resources:
+</div>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<div align="center">
 
-## Deploy on Vercel
+**⭐ If you found this project helpful, please give it a star!**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+*Built with ❤️ by [Vinit Borad](https://github.com/vinitborad) for [Incubyte](https://incubyte.co)*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**🎯 [View Live Demo](https://incubyte.vinitborad.com) | 🔧 [See Backend](https://github.com/vinitborad/incubyte-project-backend) | 🤖 [Try AI Chatbot](https://github.com/vinitborad/incubyte-project-chatbot)**
+
+</div>
