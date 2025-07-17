@@ -2,6 +2,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Environment Setup
+
+1. Copy the environment variables template:
+```bash
+cp .env.example .env.local
+```
+
+2. Update `.env.local` with your actual values:
+```env
+NEXT_PUBLIC_BACKEND_API_URL=http://localhost:5000
+NEXT_PUBLIC_CHATBOT_API_URL=http://localhost:8000
+NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL=https://your-placeholder-image-url.com/image.svg
+```
+
+### Running the Development Server
+
 First, run the development server:
 
 ```bash
@@ -19,6 +35,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Environment Variables
+
+This project uses environment variables for configuration. The following variables are required:
+
+- `NEXT_PUBLIC_BACKEND_API_URL`: URL of the main backend API server (default: http://localhost:5000)
+- `NEXT_PUBLIC_CHATBOT_API_URL`: URL of the Python chatbot server (default: http://localhost:8000)
+- `NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL`: Default placeholder image URL for products
+
+All variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. For sensitive variables that should only be available on the server-side, omit the `NEXT_PUBLIC_` prefix.
 
 ## Learn More
 

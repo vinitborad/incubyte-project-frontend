@@ -194,7 +194,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
           {sweets?.map((sweet) => (
             <Card key={sweet._id} className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm">
               <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                <img src={"https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
+                <img src={process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL || "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
               </div>
 
               <CardContent className="p-4">

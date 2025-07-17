@@ -36,7 +36,7 @@ interface RestockPayload {
 
 // Create an Axios instance pointing to your backend
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // Your backend server URL
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000', // Your backend server URL
 });
 
 // Function to fetch all sweets
@@ -82,7 +82,7 @@ export const deleteSweet = async (sweetId: string) => {
 
 
 const chatbotApi = axios.create({
-  baseURL: 'http://localhost:8000', // Your Python server URL
+  baseURL: process.env.NEXT_PUBLIC_CHATBOT_API_URL || 'http://localhost:8000', // Your Python server URL
 });
 
 interface ChatPayload {
