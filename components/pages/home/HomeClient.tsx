@@ -178,7 +178,7 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
               className="overflow-hidden hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm"
             >
               <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center">
-                <img src={"https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
+                <img src={process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_URL || "https://preview-sweet-shop-website-kzmgz9143gm4tb6fo47l.vusercontent.net/placeholder.svg?height=200&width=200"} alt={sweet.name} className="w-full h-full object-cover" />
               </div>
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg mb-2">{sweet.name}</h3>
@@ -242,6 +242,7 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
         </div>
       </div>
       <Footer />
+      <Chatbot />
     </div>
   )
 }
