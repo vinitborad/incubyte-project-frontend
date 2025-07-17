@@ -242,7 +242,9 @@ export function HomeClient({ initialSweets }: HomeClientProps) {
         </div>
       </div>
       <Footer />
-      <Chatbot />
+      <Chatbot
+        onRefreshData={handleRefreshData} // Pass the refresh data function to the chatbot
+      />
     </div>
   )
 }
