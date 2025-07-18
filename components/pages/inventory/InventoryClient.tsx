@@ -121,9 +121,14 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
   const handleAddStock = () => {
     const quantity = Number.parseInt(stockToAdd, 10);
 
-    // Add validation for positive number
+    // Add validation for positive number and maximum limit
     if (!selectedSweetId || !quantity || quantity <= 0) {
       alert("Please enter a positive number for the quantity.");
+      return;
+    }
+
+    if (quantity > 1000) {
+      alert("Maximum 1000 units can be added at once.");
       return;
     }
 
@@ -252,6 +257,7 @@ export function InventoryClient({ initialSweets }: InventoryClientProps) {
                             value={stockToAdd}
                             onChange={(e) => setStockToAdd(e.target.value)}
                             min="1"
+                            max="1000"
                           />
                         </div>
                         {/* 7. Update the button to show loading state */}

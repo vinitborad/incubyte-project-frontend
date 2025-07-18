@@ -19,7 +19,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   category: z.string().min(2, { message: "Category is required." }),
   price: z.coerce.number().positive({ message: "Price must be a positive number." }),
-  quantity: z.coerce.number().int().nonnegative({ message: "Quantity must be a positive integer." }),
+  quantity: z.coerce.number().int().nonnegative({ message: "Quantity must be a positive integer." }).max(1000, { message: "Maximum 1000 units can be added at once." }),
 })
 
 interface AddSweetDialogProps {
@@ -176,7 +176,7 @@ export function AddSweetDialog({ categories, onFormSubmit, isPending }: AddSweet
                 <FormItem>
                   <FormLabel>Stock Quantity</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input type="number" max={1000} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
