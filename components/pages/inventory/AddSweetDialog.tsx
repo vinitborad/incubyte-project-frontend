@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils"
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   category: z.string().min(2, { message: "Category is required." }),
-  price: z.coerce.number().positive({ message: "Price must be a positive number." }),
+  price: z.coerce.number().positive({ message: "Price must be a positive number." }).max(100000, { message: "Price cannot exceed ₹1,00,000." }),
   quantity: z.coerce.number().int().nonnegative({ message: "Quantity must be a positive integer." }).max(1000, { message: "Maximum 1000 units can be added at once." }),
 })
 
