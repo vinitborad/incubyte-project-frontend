@@ -9,9 +9,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](#-crafting-tools)
 
 
-**🎯 Checkout my craft at: [https://incubyte.vinitborad.com](https://incubyte.vinitborad.com)**
-
-### With this kata I would love to show you tech solution provided by me for at: **[www.patrikaprinters.com](https://www.patrikaprinters.com)**, **[www.hajripatrak.com](https://www.hajripatrak.com)**, **[www.apnipg.com](https://www.apnipg.com)**.
+## 🎯 Checkout my craft at: [https://incubyte.vinitborad.com](https://incubyte.vinitborad.com)
 
 </div>
 
